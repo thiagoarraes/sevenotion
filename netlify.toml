@@ -1,0 +1,19 @@
+# Netlify configuration file
+
+[build]
+# This command is executed to build your site.
+command = "yarn build"
+
+# The directory that contains the deploy-ready assets.
+publish = "dist"
+
+[build.context.production.environment]
+# Set the Node.js version to a recent, stable LTS version.
+NODE_VERSION = "20"
+
+# IMPORTANT: You must configure the following environment variables in the Netlify UI
+# for your site to build successfully.
+# Go to: Site settings > Build & deploy > Environment > Environment variables
+#
+# VITE_SUPABASE_URL = "your-actual-supabase-url"
+# VITE_SUPABASE_ANON_KEY = "your-actual-supabase-anon-key"
