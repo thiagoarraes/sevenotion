@@ -4,7 +4,7 @@ import { X, Plus, Edit2, Trash2, Building2, Tag, User, BarChart3, Star, CheckCir
 import { useTaskContext } from '../contexts/TaskContext';
 import { toast } from 'react-hot-toast';
 import { ConfigItem } from '../types/Task';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 
 interface ConfigModalProps {
   isOpen: boolean;

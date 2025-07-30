@@ -12,7 +12,7 @@ import { Task } from '../types/Task';
 import useMediaQuery from '../hooks/useMediaQuery';
 import { BottomNavBar } from '../components/BottomNavBar';
 import { FilterModal } from '../components/FilterModal';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 
 export type ViewMode = 'kanban' | 'table';
 

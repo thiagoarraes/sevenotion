@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Building2, Tag, User, BarChart3, Link } from 'lucide-react';
 import { Task } from '../types/Task';
 import { useTaskContext } from '../contexts/TaskContext';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 import { toast } from 'react-hot-toast';
 
 interface TaskModalProps {

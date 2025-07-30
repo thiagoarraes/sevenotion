@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useContext, ReactNode, useCallback } from 'react';
+import React, { createContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabaseClient';
 import { toast } from 'react-hot-toast';
@@ -23,7 +23,7 @@ const translateSupabaseError = (message: string): string => {
   return 'Ocorreu um erro inesperado. Tente novamente.';
 };
 
-interface AuthContextType {
+export interface AuthContextType {
   session: Session | null;
   user: User | null;
   profile: Profile | null;
@@ -35,7 +35,7 @@ interface AuthContextType {
   updateProfile: (updates: { username?: string; avatar_url?: string }) => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [session, setSession] = useState<Session | null>(null);
@@ -64,25 +64,19 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, []);
 
   useEffect(() => {
-    const getSessionAndProfile = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        setSession(session);
-        const currentUser = session?.user ?? null;
-        setUser(currentUser);
-        await fetchProfile(currentUser);
-      } catch (e) {
-        console.error("Erro ao obter a sessão:", e);
-        setSession(null);
-        setUser(null);
-        setProfile(null);
-      } finally {
+    setLoading(true);
+    // Primeiro, buscamos a sessão uma vez no carregamento inicial.
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      const currentUser = session?.user ?? null;
+      setUser(currentUser);
+      // Após obter a sessão, buscamos o perfil e então finalizamos o carregamento.
+      fetchProfile(currentUser).finally(() => {
         setLoading(false);
-      }
-    };
+      });
+    });
 
-    getSessionAndProfile();
-
+    // Em seguida, configuramos o listener para futuras mudanças de autenticação.
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
         setSession(session);
@@ -130,9 +124,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     if (error) {
       toast.error('Erro ao fazer logout.');
     } else {
-      setSession(null);
-      setUser(null);
-      setProfile(null);
+      // Não é necessário setar o estado para null aqui.
+      // O listener onAuthStateChange cuidará disso de forma centralizada.
       toast.success('Logout realizado com sucesso!');
     }
   };
@@ -175,12 +168,4 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-};
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
 };

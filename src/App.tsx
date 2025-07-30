@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import { useAuth } from './contexts/AuthContext';
+import { useAuth } from './hooks/useAuth';
 import AuthPage from './pages/AuthPage';
 import ProfilePage from './pages/ProfilePage';
 import MainPage from './pages/MainPage';

@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Plus, FileText, History, Settings, BarChart3, ChevronsLeft, LogOut } from 'lucide-react';
 import { Logo } from './Logo';
 import { useTaskContext } from '../contexts/TaskContext';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 import { Avatar } from './Avatar';
 
 interface SidebarProps {
